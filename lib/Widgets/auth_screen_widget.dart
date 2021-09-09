@@ -1,5 +1,10 @@
+import 'dart:io';
+
 import 'package:chatapp/Service/auth_login_signup.dart';
+import 'package:chatapp/View/AuthScreen/auth_screen_viewmodel.dart';
+import 'package:chatapp/Widgets/upload_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AuthScreenWidget extends StatefulWidget {
   @override
@@ -7,12 +12,19 @@ class AuthScreenWidget extends StatefulWidget {
 }
 
 class _AuthScreenWidgetState extends State<AuthScreenWidget> {
+  TextEditingController _emailcontroller = TextEditingController();
+  TextEditingController _passcontroller = TextEditingController();
+
+  TextEditingController _usernamecontroller = TextEditingController();
+
   final _formkey = GlobalKey<FormState>();
   bool _islogin = true;
   String _email = "";
   String _username = "";
   String _password = "";
   bool isloading = false;
+  File imageuser;
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -26,7 +38,9 @@ class _AuthScreenWidgetState extends State<AuthScreenWidget> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(children: [
+                if (!_islogin) UploadImage(),
                 TextFormField(
+                  controller: _emailcontroller,
                   onSaved: (value) {
                     print("email $value");
                     _email = value;
@@ -44,6 +58,7 @@ class _AuthScreenWidgetState extends State<AuthScreenWidget> {
                 ),
                 if (_islogin == false)
                   TextFormField(
+                    controller: _usernamecontroller,
                     onSaved: (value) {
                       print("user name $value");
                       setState(() {
@@ -51,8 +66,8 @@ class _AuthScreenWidgetState extends State<AuthScreenWidget> {
                       });
                     },
                     validator: (value) {
-                      if (value.isEmpty || value.length < 7) {
-                        return "please enter more";
+                      if (value.isEmpty || value.length > 11) {
+                        return "user name too long ";
                       }
                       return null;
                     },
@@ -60,6 +75,7 @@ class _AuthScreenWidgetState extends State<AuthScreenWidget> {
                     keyboardType: TextInputType.emailAddress,
                   ),
                 TextFormField(
+                  controller: _passcontroller,
                   onSaved: (value) {
                     print("pass $value");
                     _password = value;
@@ -82,13 +98,30 @@ class _AuthScreenWidgetState extends State<AuthScreenWidget> {
                   RaisedButton(
                     onPressed: () async {
                       FocusScope.of(context).unfocus();
+
+                      if (!_islogin) {
+                        imageuser = Provider.of<AuthDataProvider>(context,
+                                listen: false)
+                            .pickedimage;
+
+                        print(imageuser);
+                      }
+
                       if (_formkey.currentState.validate()) {
+                        if (imageuser == null && _islogin == false) {
+                          Scaffold.of(context).showSnackBar(SnackBar(
+                            content: Text("please choose image"),
+                            backgroundColor: Colors.black26,
+                          ));
+                          return;
+                        }
                         _formkey.currentState.save();
                         setState(() {
                           isloading = true;
                         });
                         try {
                           await Auth.authLoginSignup(
+                            userimage: imageuser,
                             ctx: context,
                             email: _email,
                             password: _password,
@@ -107,6 +140,9 @@ class _AuthScreenWidgetState extends State<AuthScreenWidget> {
                 FlatButton(
                   textColor: Theme.of(context).primaryColor,
                   onPressed: () {
+                    _emailcontroller.clear();
+                    _passcontroller.clear();
+                    _usernamecontroller.clear();
                     setState(() {
                       _islogin = !_islogin;
                     });

@@ -1,3 +1,5 @@
+import 'package:chatapp/Widgets/send_msg.dart';
+import 'package:chatapp/Widgets/view_msg.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,7 +14,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("chat Screen"),
+        title: Text("chat "),
         leading: IconButton(
           onPressed: () async {
             FirebaseAuth.instance.signOut();
@@ -21,34 +23,16 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
         centerTitle: true,
       ),
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection("chat/RqTLtgBcLVOdp0HiziyJ/message")
-            .snapshots(),
-        builder: (ctx, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          final thelist = snapshot.data.docs;
-
-          return ListView.builder(
-              itemCount: thelist.length,
-              itemBuilder: (context, index) {
-                return Container(
-                    padding: EdgeInsets.all(20),
-                    child: Text(thelist[index]["text"]));
-              });
-        },
+      body: Container(
+        child: Column(
+          children: [
+            Expanded(
+              child: ViewMessages(),
+            ),
+            SendMessage(),
+          ],
+        ),
       ),
-      floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            FirebaseFirestore.instance
-                .collection("chat/RqTLtgBcLVOdp0HiziyJ/message")
-                .add({"text": "ahla msa aleko"});
-          },
-          child: Icon(Icons.add)),
     );
   }
 }

@@ -1,11 +1,17 @@
+import 'dart:io';
+
+import 'package:chatapp/View/AuthScreen/auth_screen_viewmodel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:provider/provider.dart';
 
 class Auth {
   static authLoginSignup({
+    File userimage,
     String email,
     String password,
     String username,
@@ -23,6 +29,13 @@ class Auth {
       } else {
         UserCredential userCredential = await auth
             .createUserWithEmailAndPassword(email: email, password: password);
+        final ref = await FirebaseStorage.instance
+            .ref()
+            .child("User_image")
+            .child("${userCredential.user.uid + ".jpg"}");
+        await ref.putFile(userimage);
+        final urlpicture = await ref.getDownloadURL();
+
         FirebaseFirestore.instance
             .collection("users")
             .doc(userCredential.user.uid)
@@ -30,6 +43,7 @@ class Auth {
           "email": email,
           "username": username,
           "password": password,
+          "imageurl": urlpicture,
         });
       }
     } on FirebaseAuthException catch (e) {
