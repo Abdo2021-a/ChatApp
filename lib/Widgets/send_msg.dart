@@ -25,6 +25,9 @@ class _SendMessageState extends State<SendMessage> {
       "userimage": getuserdata["imageurl"],
     });
     _textcontroller.clear();
+    setState(() {
+      _textinputuser = "";
+    });
   }
 
   TextEditingController _textcontroller = TextEditingController();

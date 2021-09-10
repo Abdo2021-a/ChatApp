@@ -100,49 +100,5 @@ class MsgBubble extends StatelessWidget {
         ),
       ],
     );
-    //     Column(
-    //   crossAxisAlignment:
-    //       isme ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-    //   children: [
-    //     Text(
-    //       username,
-    //       style: TextStyle(color: Colors.black, fontSize: 15),
-    //     ),
-    //     SizedBox(
-    //       height: 10,
-    //     ),
-    //     CircleAvatar(
-    //       radius: 25,
-    //       backgroundImage: NetworkImage(userimage),
-    //     ),
-    //     SizedBox(
-    //       height: 10,
-    //     ),
-    //     Row(
-    //       mainAxisAlignment:
-    //           isme ? MainAxisAlignment.end : MainAxisAlignment.start,
-    //       children: [
-    //         Container(
-    //           decoration: BoxDecoration(
-    //             borderRadius: BorderRadius.only(
-    //                 bottomRight:
-    //                     isme ? Radius.circular(20) : Radius.circular(0),
-    //                 bottomLeft:
-    //                     isme ? Radius.circular(0) : Radius.circular(20)),
-    //             color: isme ? Colors.blue.shade100 : Colors.teal.shade100,
-    //           ),
-    //           child: Container(
-    //             margin: EdgeInsets.all(20),
-    //             child: Text(
-    //               message,
-    //               maxLines: 2,
-    //               style: TextStyle(color: Colors.black, fontSize: 15),
-    //             ),
-    //           ),
-    //         ),
-    //       ],
-    //     ),
-    //   ],
-    // );
   }
 }

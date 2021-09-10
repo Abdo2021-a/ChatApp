@@ -108,13 +108,13 @@ class _AuthScreenWidgetState extends State<AuthScreenWidget> {
                       }
 
                       if (_formkey.currentState.validate()) {
-                        if (imageuser == null && _islogin == false) {
-                          Scaffold.of(context).showSnackBar(SnackBar(
-                            content: Text("please choose image"),
-                            backgroundColor: Colors.black26,
-                          ));
-                          return;
-                        }
+                        // if (imageuser == null && _islogin == false) {
+                        //   Scaffold.of(context).showSnackBar(SnackBar(
+                        //     content: Text("please choose image"),
+                        //     backgroundColor: Colors.black26,
+                        //   ));
+                        //   return;
+                        // }
                         _formkey.currentState.save();
                         setState(() {
                           isloading = true;
